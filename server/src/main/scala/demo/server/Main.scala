@@ -3,7 +3,8 @@ package demo.server
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 
-import scala.io.StdIn
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 object Main extends App {
 
@@ -13,10 +14,12 @@ object Main extends App {
 
   val bindingFuture = Http().bindAndHandle(Routes.route , "localhost", 8080)
 
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+  println(s"Server online at http://localhost:8080/")
 
-  StdIn.readLine() // let it run until user presses return
-  bindingFuture
-    .flatMap(_.unbind()) // trigger unbinding from the port
-    .onComplete(_ => system.terminate()) // and shutdown when done
+  scala.sys.addShutdownHook {
+    println("Terminating...")
+    system.terminate()
+    Await.result(system.whenTerminated, 30 seconds)
+    println("Terminated... Bye")
+  }
 }
