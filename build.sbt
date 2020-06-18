@@ -1,13 +1,16 @@
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.dockerUsername
 
 name := "istio-demo"
-version := "0.1.1"
-scalaVersion := "2.13.2"
+version in ThisBuild := "0.1.2"
+scalaVersion in ThisBuild := "2.13.2"
 
 
 lazy val global = project
   .in(file("."))
-  .settings(commonSettings)
+  .settings(
+    commonSettings,
+    //version := version.value
+  )
   .aggregate(
     client,
     server
@@ -23,6 +26,7 @@ lazy val client = project
 lazy val server = project
   .settings(
     name := "server",
+    //version := "0.1.1",
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "demo.server",
     commonSettings ++ dockerCommonSettings ++ dockerServerSettings,
@@ -70,5 +74,9 @@ lazy val dockerCommonSettings = Seq(
 )
 
 lazy val dockerServerSettings = Seq(
-  dockerAliases ++= Seq(dockerAlias.value.withUsername(Some("d4rkest")).withName("istio-demo-server")),
+  dockerAliases ++=
+    Seq(dockerAlias.value
+      .withUsername(Some("d4rkest"))
+      .withName(name.value)
+      .withTag(Some(version.value))),
 )
