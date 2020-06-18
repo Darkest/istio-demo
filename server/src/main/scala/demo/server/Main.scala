@@ -12,9 +12,9 @@ object Main extends App {
   // needed for the future flatMap/onComplete in the end
   implicit val executionContext = system.dispatcher
 
-  val bindingFuture = Http().bindAndHandle(Routes.route , "localhost", 8080)
+  val bindingFuture = Http().bindAndHandle(Routes.route, "0.0.0.0", 8080)
 
-  println(s"Server online at http://localhost:8080/")
+  println(s"Server online at http://0.0.0.0:8080/")
 
   scala.sys.addShutdownHook {
     println("Terminating...")

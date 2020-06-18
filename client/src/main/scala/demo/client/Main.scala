@@ -2,7 +2,6 @@ package demo.client
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import demo.server.Routes
 
 import scala.io.StdIn
 

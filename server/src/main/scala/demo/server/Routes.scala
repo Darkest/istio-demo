@@ -10,12 +10,19 @@ import io.circe.generic.auto._
 object Routes extends ErrorAccumulatingCirceSupport {
 
   case class MockDefinition(path: String, requests: Seq[Json], responses: Seq[Json])
+
   @volatile var state = Map.empty[String, Map[Json, Json]]
 
   val simpleSleepRoute: Route = {
     (get & parameter("sleep".as[Int].?(1))) { sleep: Int =>
       Thread.sleep(sleep * 1000)
       complete(HttpResponse.apply(StatusCodes.OK))
+    }
+  }
+
+  val versionRoute: Route = {
+    get {
+      complete(BuildInfo.version)
     }
   }
 
@@ -45,7 +52,8 @@ object Routes extends ErrorAccumulatingCirceSupport {
 
   val route =
     pathEndOrSingleSlash{
-      fixedRoute
+      versionRoute ~
+        fixedRoute
     } ~
       path("sleep") {
         simpleSleepRoute

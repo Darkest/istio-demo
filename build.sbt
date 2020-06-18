@@ -1,7 +1,7 @@
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.dockerUsername
 
 name := "istio-demo"
-version := "0.1"
+version := "0.1.1"
 scalaVersion := "2.13.2"
 
 
@@ -18,14 +18,16 @@ lazy val client = project
     name := "client",
     commonSettings ++ dockerCommonSettings,
     libraryDependencies ++= dependencies
-  ).enablePlugins(DockerPlugin, JavaAppPackaging)
+  ).enablePlugins(DockerPlugin, JavaAppPackaging, BuildInfoPlugin)
 
 lazy val server = project
   .settings(
     name := "server",
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := "demo.server",
     commonSettings ++ dockerCommonSettings ++ dockerServerSettings,
     libraryDependencies ++= dependencies
-  ).enablePlugins(DockerPlugin, JavaAppPackaging)
+  ).enablePlugins(DockerPlugin, JavaAppPackaging, BuildInfoPlugin)
 
 val circeVersion = "0.12.3"
 
@@ -57,7 +59,8 @@ lazy val compilerOptions = Seq(
 )
 
 lazy val commonSettings = Seq(
-  scalacOptions ++= compilerOptions,
+  scalaVersion := "2.13.2",
+  scalacOptions ++= compilerOptions
 )
 
 lazy val dockerCommonSettings = Seq(
