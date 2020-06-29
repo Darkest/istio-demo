@@ -3,11 +3,12 @@ package demo.server
 import akka.http.scaladsl.model.{HttpResponse, _}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import com.typesafe.scalalogging.LazyLogging
 import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport
 import io.circe.Json
 import io.circe.generic.auto._
 
-object Routes extends ErrorAccumulatingCirceSupport {
+object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
 
   case class MockDefinition(path: String, requests: Seq[Json], responses: Seq[Json])
 
@@ -21,7 +22,8 @@ object Routes extends ErrorAccumulatingCirceSupport {
   }
 
   val versionRoute: Route = {
-    get {
+    (get & extractRequest & extractHost) { case (rq, host) =>
+      logger.info(s"Got version request from $host")
       complete(BuildInfo.version)
     }
   }

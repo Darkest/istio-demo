@@ -5,6 +5,7 @@ import akka.http.scaladsl.Http
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import scala.jdk.CollectionConverters._
 
 object Main extends App {
 
@@ -13,6 +14,10 @@ object Main extends App {
   implicit val executionContext = system.dispatcher
 
   val bindingFuture = Http().bindAndHandle(Routes.route, "0.0.0.0", 8080)
+
+  println("Environment variables:")
+  System.getenv().asScala.foreach { case (k, v) => println(s"$k -> $v") }
+  println("End of environment variables")
 
   println(s"Server online at http://0.0.0.0:8080/")
 

@@ -1,7 +1,7 @@
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.dockerUsername
 
 name := "istio-demo"
-version in ThisBuild := "0.1.2"
+version in ThisBuild := "0.1.3"
 scalaVersion in ThisBuild := "2.13.2"
 
 
