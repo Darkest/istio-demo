@@ -1,5 +1,7 @@
 package demo.server
 
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpResponse, _}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -28,6 +30,14 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
     }
   }
 
+  def redirectRoute(implicit actorSystem: ActorSystem): Route = {
+    get {
+      val rqUrl = AppConfig.redirectUrl
+      val resp = Http().singleRequest(HttpRequest(HttpMethods.GET, rqUrl))
+      complete(resp)
+    }
+  }
+
   // fixed route to update state
   val fixedRoute: Route = post {
     entity(as[MockDefinition]) { mock =>
@@ -52,13 +62,16 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
     concat(routes.toList: _*)(ctx)
   }
 
-  val route =
-    pathEndOrSingleSlash{
+  def route(implicit actorSystem: ActorSystem) =
+    pathEndOrSingleSlash {
       versionRoute ~
         fixedRoute
     } ~
       path("sleep") {
         simpleSleepRoute
+      } ~
+      path("redirect") {
+        redirectRoute
       } ~
       dynamicRoute
 
