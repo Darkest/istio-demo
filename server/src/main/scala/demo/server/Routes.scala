@@ -5,6 +5,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpResponse, _}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
 import com.typesafe.scalalogging.LazyLogging
 import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport
 import io.circe.Json
@@ -33,7 +34,11 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
   def redirectRoute(implicit actorSystem: ActorSystem): Route = {
     get {
       val rqUrl = AppConfig.redirectUrl
-      val resp = Http().singleRequest(HttpRequest(HttpMethods.GET, rqUrl))
+      val conSettings = ConnectionPoolSettings(actorSystem)
+        .withConnectionSettings(ClientConnectionSettings(actorSystem))
+        .withMaxRetries(AppConfig.redirectRetries)
+      val resp = Http().singleRequest(HttpRequest(HttpMethods.GET, rqUrl), settings = conSettings)
+      resp.onComplete(rsp => logger.info(s"$rsp"))(actorSystem.dispatcher)
       complete(resp)
     }
   }
