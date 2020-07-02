@@ -32,12 +32,15 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
   }
 
   def redirectRoute(implicit actorSystem: ActorSystem): Route = {
-    get {
+    (get & extractRequest) { rq =>
+      logger.info(s"Got request $rq")
       val rqUrl = AppConfig.redirectUrl
       val conSettings = ConnectionPoolSettings(actorSystem)
         .withConnectionSettings(ClientConnectionSettings(actorSystem))
         .withMaxRetries(AppConfig.redirectRetries)
-      val resp = Http().singleRequest(HttpRequest(HttpMethods.GET, rqUrl), settings = conSettings)
+      val httpRq = HttpRequest(HttpMethods.GET, rqUrl)
+      logger.info(s"About to send request $httpRq")
+      val resp = Http().singleRequest(httpRq, settings = conSettings)
       resp.onComplete(rsp => logger.info(s"$rsp"))(actorSystem.dispatcher)
       complete(resp)
     }
