@@ -46,6 +46,12 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
     }
   }
 
+  val routeWithCustomCode: Route =
+    (get & parameter("code".as[Int]) & extractRequest) { case (code, rq) =>
+      logger.info(s"Got request $rq")
+      complete(HttpResponse(StatusCode.int2StatusCode(code)))
+    }
+
   // fixed route to update state
   val fixedRoute: Route = post {
     entity(as[MockDefinition]) { mock =>
@@ -80,6 +86,9 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
       } ~
       path("redirect") {
         redirectRoute
+      } ~
+      path("responseWith") {
+        routeWithCustomCode
       } ~
       dynamicRoute
 
