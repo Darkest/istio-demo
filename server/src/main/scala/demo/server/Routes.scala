@@ -26,29 +26,25 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
 
   val versionRoute: Route = {
     (get & extractRequest & extractHost) { case (rq, host) =>
-      logger.info(s"Got version request from $host")
-      complete(BuildInfo.version)
+      val statusString = s"${BuildInfo.version} runs on ${AppConfig.placement}"
+      complete(HttpResponse(StatusCodes.OK).withEntity(statusString))
     }
   }
 
   def redirectRoute(implicit actorSystem: ActorSystem): Route = {
     (get & extractRequest) { rq =>
-      logger.info(s"Got request $rq")
       val rqUrl = AppConfig.redirectUrl
       val conSettings = ConnectionPoolSettings(actorSystem)
         .withConnectionSettings(ClientConnectionSettings(actorSystem))
         .withMaxRetries(AppConfig.redirectRetries)
       val httpRq = HttpRequest(HttpMethods.GET, rqUrl)
-      logger.info(s"About to send request $httpRq")
       val resp = Http().singleRequest(httpRq, settings = conSettings)
-      resp.onComplete(rsp => logger.info(s"$rsp"))(actorSystem.dispatcher)
       complete(resp)
     }
   }
 
   val routeWithCustomCode: Route =
     (get & parameter("code".as[Int]) & extractRequest) { case (code, rq) =>
-      logger.info(s"Got request $rq")
       complete(HttpResponse(StatusCode.int2StatusCode(code)))
     }
 
@@ -76,7 +72,7 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
     concat(routes.toList: _*)(ctx)
   }
 
-  def route(implicit actorSystem: ActorSystem) =
+  def route(implicit actorSystem: ActorSystem): Route =
     pathEndOrSingleSlash {
       versionRoute ~
         fixedRoute

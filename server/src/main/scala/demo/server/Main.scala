@@ -1,7 +1,10 @@
 package demo.server
 
 import akka.actor.ActorSystem
+import akka.event.Logging
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.directives.DebuggingDirectives
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -15,7 +18,12 @@ object Main extends App {
 
   val host = AppConfig.host
   val port = AppConfig.port
-  val bindingFuture = Http().bindAndHandle(Routes.route, host, port)
+
+  val requestHandler: Route = DebuggingDirectives.logRequestResult("req/resp", Logging.InfoLevel) {
+    Routes.route
+  }
+
+  val bindingFuture = Http().bindAndHandle(requestHandler, host, port)
 
   println("Environment variables:")
   System.getenv().asScala.foreach { case (k, v) => println(s"$k -> $v") }
