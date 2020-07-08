@@ -41,7 +41,16 @@ spec:
             subset: v3
             port:
               number: 8080
+          weight: 0
+        - destination:
+            host: server-svc
+            subset: v4
+            port:
+              number: 8080
           weight: 100
+      retries:
+        attempts: 0
+        #pefrTryTimeout: 2s
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -66,6 +75,9 @@ spec:
         loadBalancer:
           consistentHash:
             httpHeaderName: "hash"
+    - name: v4
+      labels:
+        version: 0.1.4
 ---
 kind: Service
 apiVersion: v1
