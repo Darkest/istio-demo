@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: zipkin-se
+spec:
+  hosts:
+    - zipkin.istio-system
+  location: MESH_EXTERNAL
+  ports:
+    - number: 9411
+      name: http
+      protocol: HTTP
+  resolution: DNS
+  endpoints:
+    - address: 192.168.1.13
+      ports:
+        http: 9411

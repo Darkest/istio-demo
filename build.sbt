@@ -1,32 +1,45 @@
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.dockerUsername
 
 name := "istio-demo"
-version in ThisBuild := "0.1.4"
 scalaVersion in ThisBuild := "2.13.2"
 
 
 lazy val global = project
   .in(file("."))
   .settings(
-    commonSettings,
-    //version := version.value
+    commonSettings
   )
   .aggregate(
     client,
     server
   )
 
+lazy val balance = project
+  .settings(
+    name := "balance",
+    version := "0.1.0",
+    commonSettings ++ dockerCommonSettings,
+    libraryDependencies ++= dependencies,
+    guardrailTasks in Compile := List(
+      ScalaServer(
+        specPath = (Compile / resourceDirectory).value / "openapi" / "balance.yaml"
+      ))
+  ).enablePlugins(DockerPlugin, JavaAppPackaging, BuildInfoPlugin)
+
+
 lazy val client = project
   .settings(
     name := "client",
+    version := "0.1.1",
     commonSettings ++ dockerCommonSettings,
+
     libraryDependencies ++= dependencies
   ).enablePlugins(DockerPlugin, JavaAppPackaging, BuildInfoPlugin)
 
 lazy val server = project
   .settings(
     name := "server",
-    //version := "0.1.1",
+    version := "0.1.4",
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "demo.server",
     commonSettings ++ dockerCommonSettings ++ dockerServerSettings,
@@ -37,6 +50,7 @@ val circeVersion = "0.12.3"
 
 val dependencies = Seq(
   "com.typesafe.akka" %% "akka-http" % "10.1.12",
+  "io.kamon" %% "kamon-akka-http" % "2.1.3",
   "com.typesafe.akka" %% "akka-stream" % "2.6.6",
   "de.heikoseeberger" %% "akka-http-circe" % "1.31.0",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
@@ -50,7 +64,7 @@ val dependencies = Seq(
 
 lazy val compilerOptions = Seq(
   "-Xcheckinit",
-  //"-Xfatal-warnings",
+  "-Xfatal-warnings",
   "-unchecked",
   "-feature",
   "-language:existentials",

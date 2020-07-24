@@ -1,0 +1,58 @@
+openapi: "3.0.3"
+info:
+  title: Accounts service
+  version: 0.1.0
+paths:
+
+  /accounts/{id}:
+    get:
+      operationId: getAccounts
+      x-jvm-package: users
+
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "List of User's accounts with amounts on them"
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/Balance'
+
+        404:
+          description: Not found
+
+components:
+  schemas:
+    Balance:
+      type: object
+      required:
+        - user_id
+        - accounts
+      properties:
+        user_id:
+          type: string
+        accounts:
+          $ref: '#/components/schemas/UserAccounts'
+
+    UserAccounts:
+      type: array
+      items:
+        $ref: '#/components/schemas/UserAccount'
+
+    UserAccount:
+      type: object
+      required:
+        - account_id
+        - amount
+      properties:
+        account_id:
+          type: string
+        amount:
+          type: number

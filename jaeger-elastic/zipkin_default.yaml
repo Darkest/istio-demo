@@ -1,0 +1,50 @@
+kind: Service
+apiVersion: v1
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"maistra.io/mesh-generation":"1.1.3-16"},"labels":{"app":"jaeger","app.kubernetes.io/component":"tracing","app.kubernetes.io/instance":"istio-system","app.kubernetes.io/managed-by":"maistra-istio-operator","app.kubernetes.io/name":"tracing","app.kubernetes.io/part-of":"istio","app.kubernetes.io/version":"1.1.3-16","chart":"tracing","heritage":"Tiller","jaeger-infra":"zipkin-service","maistra.io/owner":"istio-system","release":"istio"},"name":"zipkin","namespace":"istio-system","ownerReferences":[{"apiVersion":"maistra.io/v1","blockOwnerDeletion":true,"controller":true,"kind":"ServiceMeshControlPlane","name":"basic-install","uid":"094aefdc-52be-429d-9fe2-4502a6eaf2f0"}]},"spec":{"ports":[{"name":"zipkin","port":9411,"protocol":"TCP","targetPort":9411}],"selector":{"app.kubernetes.io/component":"collector","app.kubernetes.io/instance":"jaeger","app.kubernetes.io/managed-by":"jaeger-operator","app.kubernetes.io/name":"jaeger-collector","app.kubernetes.io/part-of":"jaeger"},"type":"ClusterIP"}}
+    maistra.io/mesh-generation: 1.1.3-16
+  selfLink: /api/v1/namespaces/istio-system/services/zipkin
+  resourceVersion: '3514355'
+  name: zipkin
+  uid: 5010b1fb-b0ce-4b73-ba69-09897d227b8a
+  creationTimestamp: '2020-07-16T20:04:08Z'
+  namespace: istio-system
+  ownerReferences:
+    - apiVersion: maistra.io/v1
+      kind: ServiceMeshControlPlane
+      name: basic-install
+      uid: 094aefdc-52be-429d-9fe2-4502a6eaf2f0
+      controller: true
+      blockOwnerDeletion: true
+  labels:
+    app: jaeger
+    app.kubernetes.io/part-of: istio
+    app.kubernetes.io/instance: istio-system
+    release: istio
+    jaeger-infra: zipkin-service
+    app.kubernetes.io/version: 1.1.3-16
+    app.kubernetes.io/component: tracing
+    app.kubernetes.io/managed-by: maistra-istio-operator
+    maistra.io/owner: istio-system
+    app.kubernetes.io/name: tracing
+    chart: tracing
+    heritage: Tiller
+spec:
+  ports:
+    - name: zipkin
+      protocol: TCP
+      port: 9411
+      targetPort: 9411
+  selector:
+    app.kubernetes.io/component: collector
+    app.kubernetes.io/instance: jaeger
+    app.kubernetes.io/managed-by: jaeger-operator
+    app.kubernetes.io/name: jaeger-collector
+    app.kubernetes.io/part-of: jaeger
+  clusterIP: 172.30.92.10
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}

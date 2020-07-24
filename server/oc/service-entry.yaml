@@ -14,17 +14,17 @@ spec:
       protocol: HTTP
   resolution: DNS
   endpoints:
-    - address: 192.168.1.13
-      ports:
-        http: 8081
-      locality: 'eu-central-2/zone2'
-    - address: 192.168.1.13
-      ports:
-        http: 8080
-      locality: 'eu-central-1/zone1'
+#    - address: 192.168.1.13
+    #      ports:
+    #        http: 8081
+    #      locality: 'eu-central-2/zone2'
+    #    - address: 192.168.1.13
+    #      ports:
+    #        http: 8080
+    #      locality: 'eu-central-1/zone1'
     - address: istio-ingressgateway-istio-system.apps-crc.testing
       ports:
-        http: 30765
+        http: 31313
       locality: 'eu-central-2/zone1'
 
 ---
@@ -41,11 +41,7 @@ spec:
       http:
         http2MaxRequests: 1000
         maxRequestsPerConnection: 10
-    outlierDetection:
-      consecutiveErrors: 1
-      interval: 10s
-      baseEjectionTime: 10s
-      maxEjectionPercent: 100
+
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService

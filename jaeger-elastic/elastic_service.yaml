@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: elastic
+  namespace: istio-system
+spec:
+  ports:
+    - name: elastic
+      protocol: TCP
+      port: 9200
+      targetPort: 9200

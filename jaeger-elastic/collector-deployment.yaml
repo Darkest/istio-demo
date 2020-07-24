@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: jaeger-collector
+  namespace: istio-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger-collector
+      version: 1.18.1
+  template:
+    metadata:
+      labels:
+        app: jaeger-collector
+        version: 1.18.1
+      annotations:
+        sidecar.istio.io/inject: 'false'
+    spec:
+      containers:
+        - name: jaeger-collector
+          image: 'jaegertracing/jaeger-collector'
+          env:
+            - name: SPAN_STORAGE_TYPE
+              value: 'elasticsearch'
+          args:
+            - --es.server-urls=http://192.168.1.13:9200
+            - --collector.zipkin.host-port=9411
+            - --es.num-shards=1
+            - --es.num-replicas=0
+            - --log-level=debug
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 14269
+              protocol: TCP
+            - containerPort: 14268
+              protocol: TCP
+            - containerPort: 14267
+              protocol: TCP
+            - containerPort: 9411
+              protocol: TCP
