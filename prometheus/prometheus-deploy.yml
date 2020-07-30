@@ -55,7 +55,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: prometheus
+  name: prometheus-service
 spec:
   selector:
     app: prometheus
@@ -63,3 +63,17 @@ spec:
   ports:
     - port: 9090
       targetPort: 9090
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: prometheus-route
+  namespace: firstprj
+spec:
+  host: prometheus-ext-firstprj.apps-crc.testing
+  to:
+    kind: Service
+    name: prometheus
+    weight: 100
+  port:
+    targetPort: 9090
