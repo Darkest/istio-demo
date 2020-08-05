@@ -1,0 +1,171 @@
+# Список дашбордов установленнных по умолчанию и метрики в них
+
+- Istio Pilot Dashboard
+    - Versions
+    - Resource Usage
+        - Memory
+        - CPU
+        - Disk
+        - Goroutines
+    - Pilot Push Information
+        - Pilot Pushes
+        - Pilot Errors
+        - Proxy Push Time
+        - Conflicts
+        - ADS Monitoring
+        - Clusters with no known endpoints
+    - Envoy Information
+        - Envoy Details
+        - XDS Active Connections
+        - XDS Requests Size
+- Istio Citadel Dashboard 
+    - Performance
+        - Memory
+        - CPU
+        - Goroutines
+    - General
+        - CSR Request
+        - Certificates Issued
+    - Erorrs
+        - CSR Creation Errors
+        - CSR Parse Errors
+        - Autentication Failures
+    - Secret Controller
+        - Service Account Secrets Created (due to SA creation)
+        - Service Account Secrets Deleted (due to SA deletion)
+        - Service Account Secrets Recreated (due to errant deletion)
+- Istio Galley Dashboard
+    - Versions
+    - Resource Usage
+        - Memory
+        - CPU
+        - Disk
+        - Goroutines
+    - Runtime
+        - Event Rates
+        - Timer Rates
+        - Events Per Snapshot
+        - State Type Instances
+    - Validation
+        - Validation Webhook Certificate
+        - Resource Validation
+        - Validation HTTP Errors
+    - Kubernetes Source
+        - Source Event Rate
+        - Kubernetes Object Conversion Failures
+    - Mesh Configuration Protocol
+        - Connected Clients
+        - Request ACKs
+        - Request NACKs
+        - Response message sizes
+- Istio Mesh
+    - Global Request Volume(rate)
+    - Global Success Rate (non-5xx responses)
+    - 4xxs
+    - 5xxs
+    - Virtual Services
+    - Destination Rules
+    - Gateways
+    - Authentication Mesh Policies
+    - HTTP/GRPC Workloads
+    - TCP Workloads
+    - Istio Components by Version
+- Istio Mixer Dashboard
+    - Deployed Versions
+        - Mixer Versions
+    - Resource Usage
+        - Memory
+        - CPU
+        - Disk
+        - Goroutines
+    - Mixer Overview
+        - Incoming Requests
+        - Response Durations
+        - Server Error Rate (5xx responses)
+        - Non-successes (4xxs)
+    - Adapters and Config
+        - Adapter Dispatch Count
+        - Adapter Dispatch Duration
+        - Rules
+        - Instances in Latest Config
+        - Handlers in Latest Config
+        - Attributes in Latest Config
+    - Individual Adapters
+        - kubernetesenv Adapter
+            - Dispatch Count By Handler
+            - Dispatch Duration By Handler
+        - prometheus Adapter
+            - Dispatch Count By Handler
+            - Dispatch Duration By Handler
+- Istio Performance Dashboard
+    - vCPU Usage
+        - vCPU / 1k rps
+        - vCPU
+    - Memory and Data Rates
+        - Memory Usage
+        - Bytes transferred / sec
+    - Istio Component Versions
+        - Istio Components by Version
+    - Proxy Resource Usage
+        - Memory
+        - vCPU
+        - Disk
+    - Pilot Resource Usage
+        - Memory
+        - vCPU
+        - Disk
+        - Goroutines
+    - Mixer Resource Usage
+        - Memory
+        - vCPU
+        - Disk
+        - Goroutines
+- Istio Service Dashboard
+    - Service
+        - Client Request Volume
+        - Client Success Rate (non-5xx responses)
+        - Client Request Duration
+        - TCP Received Bytes
+        - Server Request Volume
+        - Server Success Rate (non-5xx responses)
+        - Server Request Duration
+        - TCP Sent Bytes 
+    - CLIENT WORKLOADS
+        - Incoming Requests by Source And Response Code
+        - Incoming Success Rate (non-5xx responses) By Source
+        - Incoming Request Duration by Source
+        - Incoming Request Size By Source
+        - Response Size By Source
+        - Bytes Received from Incoming TCP Connection
+        - Bytes Sent to Incoming TCP Connection
+    - SERVICE WORKLOADS
+        - Incoming Requests by Source And Response Code
+        - Incoming Success Rate (non-5xx responses) By Source
+        - Incoming Request Duration by Source
+        - Incoming Request Size By Source
+        - Response Size By Source
+        - Bytes Received from Incoming TCP Connection
+        - Bytes Sent to Incoming TCP Connection
+- Istio Workload Dashboard
+    - WORKLOAD
+        - Incoming Request Volume
+        - Incoming Success Rate (non-5xx responses)
+        - Request Duration
+        - TCP Server Traffic
+        - TCP Client Traffic
+    - INBOUND WORKLOADS
+        - Incoming Requests by Source And Response Code
+        - Incoming Success Rate (non-5xx responses) By Source
+        - Incoming Request Duration by Source
+        - Incoming Request Size By Source
+        - Response Size By Source
+        - Bytes Received from Incoming TCP Connection
+        - Bytes Sent to Incoming TCP Connection
+    - OUTBOUND SERVICES
+        - Incoming Requests by Source And Response Code
+        - Incoming Success Rate (non-5xx responses) By Destination
+        - Incoming Request Duration by Destination
+        - Incoming Request Size By Destination
+        - Response Size By Destination
+        - Bytes Received from Incoming TCP Connection
+        - Bytes Sent to Incoming TCP Connection
