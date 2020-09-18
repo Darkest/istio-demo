@@ -39,7 +39,7 @@ lazy val client = project
 lazy val server = project
   .settings(
     name := "server",
-    version := "0.1.5",
+    version := "0.1.6",
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "demo.server",
     commonSettings ++ dockerCommonSettings ++ dockerServerSettings,
@@ -77,7 +77,7 @@ lazy val compilerOptions = Seq(
 )
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.13.2",
+  scalaVersion := "2.13.3",
   scalacOptions ++= compilerOptions
 )
 
