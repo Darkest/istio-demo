@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: ext-world-time
+  namespace: istio-demo
+  labels:
+    cfg: ingress-egress
+spec:
+  hosts:
+  - worldtimeapi.org
+  location: MESH_EXTERNAL
+  ports:
+    - name: http
+      number: 80
+      protocol: HTTP
+  resolution: DNS

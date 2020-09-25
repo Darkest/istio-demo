@@ -1,0 +1,46 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: legacy-vs
+  namespace: istio-demo
+  labels:
+    cfg: ingress-egress
+spec:
+  gateways:
+    - legacy-ingressgateway
+    - legacy-egressgateway
+  hosts:
+    - '*'
+  http:
+    - name: 'ingress'
+      match:
+        - gateways:
+            - legacy-ingressgateway
+      rewrite:
+        authority: worldtimeapi.org
+      retries:
+        attempts: 0
+      route:
+        - destination:
+            host: custom-egressgateway-svc.istio-demo.svc.cluster.local
+            port:
+              number: 443
+              name: https
+              protocol: HTTPS
+            subset: world-time-mtls
+          weight: 100
+    - name: 'egress'
+      match:
+        - gateways:
+            - legacy-egressgateway
+          port: 443
+      retries:
+        attempts: 0
+      route:
+        - destination:
+            host: worldtimeapi.org
+            port:
+              number: 80
+              name: http
+              protocol: HTTP
+          weight: 100
