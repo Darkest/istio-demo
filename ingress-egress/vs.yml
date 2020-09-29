@@ -10,7 +10,8 @@ spec:
     - legacy-ingressgateway
     - legacy-egressgateway
   hosts:
-    - '*'
+    - 'istio-demo.apps-crc.testing'
+    - 'worldtimeapi.org'
   http:
     - name: 'ingress'
       match:

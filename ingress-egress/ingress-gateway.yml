@@ -10,7 +10,7 @@ spec:
     istio: custom-ingressgateway
   servers:
     - hosts:
-        - '*'
+        - 'istio-demo.apps-crc.testing'
       port:
         name: http
         number: 80
