@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: jsonp-egressgateway
+  namespace: istio-demo
+  labels:
+    cfg: ingress-egress
+spec:
+  selector:
+    istio: custom-egressgateway
+    ns: istio-demo
+  servers:
+  - port:
+      number: 443
+      name: jsonplaceholder-https
+      protocol: HTTPS
+    hosts:
+      - jsonplaceholder.typicode.com
+    tls:
+      mode: ISTIO_MUTUAL

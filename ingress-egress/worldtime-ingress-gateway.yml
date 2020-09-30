@@ -1,17 +1,18 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: legacy-ingressgateway
+  name: worldtime-ingressgateway
   namespace: istio-demo
   labels:
     cfg: ingress-egress
 spec:
   selector:
     istio: custom-ingressgateway
+    ns: istio-demo
   servers:
     - hosts:
-        - 'istio-demo.apps-crc.testing'
+        - 'worldtime.istio-demo.apps-crc.testing'
       port:
-        name: http
-        number: 80
+        name: http-worldtime
+        number: 8081
         protocol: HTTP

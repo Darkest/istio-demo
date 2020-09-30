@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: jsonplaceholder-ingressgateway
+  namespace: istio-demo
+  labels:
+    cfg: ingress-egress
+spec:
+  selector:
+    istio: custom-ingressgateway
+    ns: istio-demo
+  servers:
+    - hosts:
+        - 'jsonplaceholder.istio-demo.apps-crc.testing'
+      port:
+        name: http-8082
+        number: 8082
+        protocol: HTTP

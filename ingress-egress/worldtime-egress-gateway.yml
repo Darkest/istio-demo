@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: worldtime-egressgateway
+  namespace: istio-demo
+  labels:
+    cfg: ingress-egress
+spec:
+  selector:
+    istio: custom-egressgateway
+    ns: istio-demo
+  servers:
+  - port:
+      number: 443
+      name: worldtimeapi-https
+      protocol: HTTPS
+    hosts:
+      - worldtimeapi.org
+    tls:
+      mode: ISTIO_MUTUAL
