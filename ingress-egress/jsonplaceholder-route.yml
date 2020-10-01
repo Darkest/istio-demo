@@ -7,7 +7,7 @@ spec:
   host: jsonplaceholder.istio-demo.apps-crc.testing
   to:
     kind: Service
-    name: custom-ingressgateway-svc
+    name: jsonplaceholder-ingressgateway-svc
     weight: 100
   port:
     targetPort: http-jsonplaceholder

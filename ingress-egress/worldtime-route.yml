@@ -7,7 +7,7 @@ spec:
   host: worldtime.istio-demo.apps-crc.testing
   to:
     kind: Service
-    name: custom-ingressgateway-svc
+    name: worldtime-ingressgateway-svc
     weight: 100
   port:
     targetPort: http-worldtime

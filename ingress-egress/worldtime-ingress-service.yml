@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+namespace: istio-demo
+metadata:
+  name: worldtime-ingressgateway-svc
+  namespace: istio-demo
+  annotations:
+  labels:
+    istio: custom-ingressgateway
+spec:
+  type: ClusterIP
+  selector:
+    app: custom-ingressgateway
+    istio: custom-ingressgateway
+    ns: istio-demo
+  ports:
+    - name: http-worldtime
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
