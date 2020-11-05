@@ -29,6 +29,9 @@ object Main extends App {
   System.getenv().asScala.foreach { case (k, v) => println(s"$k -> $v") }
   println("End of environment variables")
 
+  println("Full App config:")
+  print(AppConfig.config)
+
   println(s"Server online at http://${host}:$port/")
 
   scala.sys.addShutdownHook {

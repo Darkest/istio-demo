@@ -1,0 +1,13 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: inter-route
+  namespace: istio-demo
+spec:
+  host: inter.istio-demo.apps-crc.testing
+  to:
+    kind: Service
+    name: inter-ingressgateway-svc
+    weight: 100
+  port:
+    targetPort: http-inter

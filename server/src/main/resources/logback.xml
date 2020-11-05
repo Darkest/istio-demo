@@ -7,9 +7,9 @@
         </encoder>
     </appender>
 
-    <logger name="akka.http.impl.engine.client.PoolGateway" level="INFO" />
+    <logger name="akka.http.impl.engine.client.PoolGateway" level="TRACE" />
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

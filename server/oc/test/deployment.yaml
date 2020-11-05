@@ -1,0 +1,26 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: inter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inter
+  template:
+    metadata:
+      labels:
+        app: inter
+      annotations:
+        sidecar.istio.io/inject: 'true'
+    spec:
+      containers:
+        - name: inter
+          image: 'evil26r/demo_timeout_intermediary'
+          env:
+            - name: intermediary.base.url
+              value: 'http://google.com'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP

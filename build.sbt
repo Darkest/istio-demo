@@ -39,7 +39,7 @@ lazy val client = project
 lazy val server = project
   .settings(
     name := "server",
-    version := "0.1.6",
+    version := "0.1.8",
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "demo.server",
     commonSettings ++ dockerCommonSettings ++ dockerServerSettings,
@@ -49,7 +49,7 @@ lazy val server = project
 val circeVersion = "0.12.3"
 
 val dependencies = Seq(
-  "com.typesafe.akka" %% "akka-http" % "10.1.12",
+  "com.typesafe.akka" %% "akka-http" % "10.2.0",
   "io.kamon" %% "kamon-akka-http" % "2.1.3",
   "com.typesafe.akka" %% "akka-stream" % "2.6.6",
   "de.heikoseeberger" %% "akka-http-circe" % "1.31.0",
@@ -64,7 +64,7 @@ val dependencies = Seq(
 
 lazy val compilerOptions = Seq(
   "-Xcheckinit",
-  "-Xfatal-warnings",
+  //"-Xfatal-warnings",
   "-unchecked",
   "-feature",
   "-language:existentials",
@@ -82,6 +82,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val dockerCommonSettings = Seq(
+  dockerBaseImage := "openjdk:14",
   dockerExposedPorts := Seq(8080),
   dockerUpdateLatest := true,
   dockerUsername:= Some("d4rkest")

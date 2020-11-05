@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: server-ingressgateway
+  namespace: istio-demo
+  labels:
+    cfg: ingress-egress
+spec:
+  selector:
+    istio: ingress-api-gateway
+    ns: istio-demo
+  servers:
+    - hosts:
+        - 'server.istio-demo.apps-crc.testing'
+      port:
+        name: http-8080
+        number: 8080
+        protocol: HTTP

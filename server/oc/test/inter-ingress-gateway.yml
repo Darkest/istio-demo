@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: inter-ingressgateway
+  namespace: istio-demo
+  labels:
+    cfg: ingress-egress
+spec:
+  selector:
+    istio: custom-ingressgateway
+    ns: istio-demo
+  servers:
+    - hosts:
+        - 'inter.istio-demo.apps-crc.testing'
+      port:
+        name: http-8083
+        number: 8083
+        protocol: HTTP

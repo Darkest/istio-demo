@@ -1,0 +1,49 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: inter
+spec:
+  exportTo:
+    - "."
+  hosts:
+    - "inter.istio-demo.apps-crc.testing"
+  gateways:
+    - inter-ingressgateway
+  http:
+    - route:
+        - destination:
+            host: inter-svc
+            port:
+              number: 8080
+            subset: v6
+          weight: 100
+      retries:
+        attempts: 0
+        #pefrTryTimeout: 2s
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: inter-destination-rule
+spec:
+  exportTo:
+    - "."
+  host: inter-svc
+  subsets:
+    - name: v6
+      trafficPolicy:
+        tls:
+          mode: ISTIO_MUTUAL
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: inter-svc
+spec:
+  ports:
+    - name: http-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: inter
