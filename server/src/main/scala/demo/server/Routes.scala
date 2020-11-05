@@ -2,6 +2,7 @@ package demo.server
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import akka.http.scaladsl.model.{HttpResponse, _}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -34,6 +35,7 @@ object Routes extends ErrorAccumulatingCirceSupport with LazyLogging {
 
   def redirectRoute(implicit actorSystem: ActorSystem): Route = {
     (get & extractRequest & optionalHeaderValueByName("redirect-to")) { case (rq, redirectTo) =>
+      rq.discardEntityBytes()
       val rqUrl = redirectTo.getOrElse(AppConfig.redirectUrl)
       val tracingHeaders = rq.headers.filter(h => AppConfig.opentracingHeaders(h.lowercaseName()))
       val conSettings = ConnectionPoolSettings(actorSystem)

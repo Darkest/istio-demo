@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: server-v6
+  namespace: istio-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+      version: 0.1.8
+  template:
+    metadata:
+      labels:
+        app: server
+        version: 0.1.8
+      annotations:
+        sidecar.istio.io/inject: 'true'
+    spec:
+      containers:
+        - name: server-v6
+          image: 'd4rkest/server:0.1.8'
+          env:
+            - name: URLREDIRECT
+              value: 'https://ya.ru'
+            - name: PLACEMENT
+              value: 'Openshift on port 8080'
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP

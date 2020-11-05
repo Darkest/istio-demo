@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+namespace: istio-demo
+metadata:
+  name: inter-ingressgateway-svc
+  namespace: istio-demo
+  annotations:
+  labels:
+    istio: custom-ingressgateway
+spec:
+  type: ClusterIP
+  selector:
+    app: custom-ingressgateway
+    istio: custom-ingressgateway
+    ns: istio-demo
+  ports:
+    - name: http-inter
+      protocol: TCP
+      port: 8083
+      targetPort: 8083

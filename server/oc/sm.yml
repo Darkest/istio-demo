@@ -1,0 +1,72 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: server
+spec:
+  exportTo:
+    - "."
+  hosts:
+    - "server.istio-demo.apps-crc.testing"
+  gateways:
+    - server-ingressgateway
+  http:
+    - route:
+        - destination:
+            host: server-svc
+            subset: v6
+            port:
+              number: 8080
+          weight: 100
+      retries:
+        attempts: 0
+        #pefrTryTimeout: 2s
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: server-mesh
+spec:
+  exportTo:
+    - "."
+  hosts:
+    - "server-svc"
+  http:
+    - route:
+        - destination:
+            host: server-svc
+            subset: v6
+            port:
+              number: 8080
+          weight: 100
+      retries:
+        attempts: 0
+        #pefrTryTimeout: 2s
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: server-destination-rule
+spec:
+  exportTo:
+    - "."
+  host: server-svc
+  subsets:
+    - name: v6
+      labels:
+        version: 0.1.6
+      trafficPolicy:
+        tls:
+          mode: ISTIO_MUTUAL
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: server-svc
+spec:
+  ports:
+    - name: http-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: server
