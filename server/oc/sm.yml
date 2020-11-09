@@ -34,7 +34,7 @@ spec:
     - route:
         - destination:
             host: server-svc
-            subset: v6
+            subset: v8
             port:
               number: 8080
           weight: 100
@@ -51,9 +51,9 @@ spec:
     - "."
   host: server-svc
   subsets:
-    - name: v6
+    - name: v8
       labels:
-        version: 0.1.6
+        version: 0.1.8
       trafficPolicy:
         tls:
           mode: ISTIO_MUTUAL
