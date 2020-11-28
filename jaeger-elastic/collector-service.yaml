@@ -1,14 +1,25 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: zipkin
+  name: external-jaeger-collector
   namespace: istio-system
 spec:
+#    app: jaeger-collector
+#    version: 1.18.1
   ports:
-    - name: zipkin
+    - name: http
       protocol: TCP
       port: 9411
       targetPort: 9411
-  selector:
-    app: jaeger-collector
-    version: 1.18.1
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: external-jaeger-collector
+  namespace: istio-system
+subsets:
+  - addresses:
+      - ip: 192.168.1.183
+    ports:
+      - port: 9411
+        name: http

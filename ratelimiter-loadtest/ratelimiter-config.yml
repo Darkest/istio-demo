@@ -1,0 +1,26 @@
+apiVersion: operators.uir.vtb.ru/v1alpha1
+kind: RateLimiterConfig
+metadata:
+  name: product-ratelimit
+  namespace: bookinfo
+spec:
+  applyTo: SIDECAR_INBOUND
+  descriptors:
+    - key: remote_address
+      rate_limit:
+        requests_per_unit: 1500
+        unit: second
+  failureModeDeny: false
+  port: 9080
+  rateLimitRequestTimeout: 0.25s
+  rateLimiter: rate-limiter
+  rateLimits:
+    - actions:
+        - request_headers:
+            descriptor_key: custom-r1-header
+            header_name: custom-header
+    - actions:
+        - remote_address: {}
+  workloadSelector:
+    labels:
+      app: productpage

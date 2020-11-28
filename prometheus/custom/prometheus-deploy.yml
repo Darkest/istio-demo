@@ -14,7 +14,7 @@ spec:
       annotations:
         sidecar.istio.io/inject: "false"
     spec:
-      serviceAccountName: "runasanyuid"
+      serviceAccountName: "custom-prom-sa"
       containers:
         - name: prometheus
           image: prom/prometheus:v2.19.3
@@ -46,12 +46,12 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: prometheus
+            name: custom-prometheus
         - name: istio-certs
           secret:
             defaultMode: 420
             optional: true
-            secretName: istio.default
+            secretName: istio.custom-prom-sa
 ---
 apiVersion: v1
 kind: Service
@@ -69,12 +69,11 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: prometheus-route
-  namespace: firstprj
 spec:
-  host: prometheus-ext-firstprj.apps-crc.testing
+  host: custom-prom.apps-crc.testing
   to:
     kind: Service
-    name: prometheus
+    name: prometheus-service
     weight: 100
   port:
     targetPort: 9090

@@ -13,7 +13,7 @@ spec:
     - route:
         - destination:
             host: server-svc
-            subset: v6
+            subset: v8
             port:
               number: 8080
           weight: 100

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hot-rod
+  labels:
+    app: hot-rod
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: hot-rod
+      labels:
+        app: hot-rod
+      annotations:
+        sidecar.istio.io/inject: 'true'
+    spec:
+      containers:
+        - name: hot-rod
+          image: jaegertracing/example-hotrod:latest
+          imagePullPolicy: IfNotPresent
+        - name: jaeger-agent
+          image: jaegertracing/jaeger-agent:1.19.2
+          imagePullPolicy: IfNotPresent
+          args:
+            - '--reporter.grpc.host-port=jaeger-collector:14250'
+            - '--reporter.type=grpc'
+            - '--log-level=debug'
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: hot-rod

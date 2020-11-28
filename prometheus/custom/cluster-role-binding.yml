@@ -1,0 +1,12 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: custom-prometheus
+subjects:
+  - kind: ServiceAccount
+    name: custom-prom-sa
+    namespace: custom-prom
+roleRef:
+  kind: ClusterRole
+  name: custom-prometheus
+  apiGroup: rbac.authorization.k8s.io

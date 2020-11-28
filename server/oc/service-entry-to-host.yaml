@@ -1,17 +1,19 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: ServiceEntry
 metadata:
-  name: zipkin-se
+  name: external-svc-http
 spec:
   hosts:
-    - zipkin.istio-system
+    - test
+  addresses:
+    - 192.168.1.183
   location: MESH_EXTERNAL
   ports:
-    - number: 9411
+    - number: 8080
       name: http
       protocol: HTTP
   resolution: DNS
   endpoints:
-    - address: 192.168.1.13
+    - address: 192.168.1.183
       ports:
-        http: 9411
+        http: 8080

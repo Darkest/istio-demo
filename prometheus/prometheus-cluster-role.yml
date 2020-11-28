@@ -1,0 +1,69 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-ext
+  namespace: firstprj
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - maistra.io
+    resources:
+      - servicemeshmemberrolls
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - ''
+    resources:
+      - services
+      - endpoints
+      - pods
+  - verbs:
+      - get
+    apiGroups:
+      - ''
+    resources:
+      - configmaps
+  - verbs:
+      - get
+    nonResourceURLs:
+      - /metrics
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-ext
+  namespace: istio-system
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - maistra.io
+    resources:
+      - servicemeshmemberrolls
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - ''
+    resources:
+      - services
+      - endpoints
+      - pods
+  - verbs:
+      - get
+    apiGroups:
+      - ''
+    resources:
+      - configmaps
+  - verbs:
+      - get
+    nonResourceURLs:
+      - /metrics

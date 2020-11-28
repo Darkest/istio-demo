@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: book-ingressgateway
+  namespace: bookinfo
+  labels:
+    cfg: ingress-egress
+spec:
+  selector:
+    istio: ingress-api-gateway
+    ns: bookinfo
+  servers:
+    - hosts:
+        - 'bookinfo.apps-crc.testing'
+      port:
+        name: http
+        number: 8080
+        protocol: HTTP

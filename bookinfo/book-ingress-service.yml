@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+namespace: bookinfo
+metadata:
+  name: ingress-api-gateway-svc
+  namespace: bookinfo
+  annotations: {}
+  labels:
+    istio: custom-ingressgateway
+spec:
+  type: ClusterIP
+  selector:
+    app: ingress-api-gateway
+    istio: ingress-api-gateway
+    ns: bookinfo
+  ports:
+    - name: http-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 8080

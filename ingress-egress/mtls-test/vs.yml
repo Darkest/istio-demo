@@ -1,0 +1,83 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: legacy-vs
+  namespace: istio-demo
+  labels:
+    cfg: ingress-egress
+spec:
+  gateways:
+    - worldtime-ingressgateway
+    - jsonplaceholder-ingressgateway
+    - worldtime-egressgateway
+    - jsonp-egressgateway
+  hosts:
+    - 'worldtime.istio-demo.apps-crc.testing'
+    - 'worldtimeapi.org'
+    - 'jsonplaceholder.istio-demo.apps-crc.testing'
+    - 'jsonplaceholder.typicode.com'
+  http:
+    - name: 'worldtime-ingress'
+      match:
+        - gateways:
+            - worldtime-ingressgateway
+      rewrite:
+        authority: worldtimeapi.org
+      retries:
+        attempts: 0
+      route:
+        - destination:
+            host: custom-egressgateway-svc.istio-demo.svc.cluster.local
+            port:
+              number: 443
+              name: https
+              protocol: HTTPS
+            subset: worldtime-mtls
+          weight: 100
+    - name: 'jsonplaceholder-ingress'
+      match:
+        - gateways:
+            - jsonplaceholder-ingressgateway
+      rewrite:
+        authority: jsonplaceholder.typicode.com
+      retries:
+        attempts: 0
+      route:
+        - destination:
+            host: custom-egressgateway-svc.istio-demo.svc.cluster.local
+            port:
+              number: 80
+              name: http
+              protocol: HTTPS
+            subset: jsonplaceholder-mtls
+          weight: 100
+    - name: 'jsonplaceholder-egress'
+      match:
+        - gateways:
+            - jsonp-egressgateway
+          port: 443
+        - authority:
+            exact: 'jsonplaceholder.typicode.com'
+      retries:
+        attempts: 0
+      route:
+        - destination:
+            host: jsonplaceholder.typicode.com
+            port:
+              number: 80
+              name: http
+              protocol: HTTP
+          weight: 100
+    - name: 'worldtime-egress'
+      match:
+        - gateways:
+            - worldtime-egressgateway
+          port: 443
+        - authority:
+            exact: 'worldtimeapi.org'
+      retries:
+        attempts: 0
+      route:
+        - destination:
+            host: worldtimeapi.org
+          weight: 100

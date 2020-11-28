@@ -1,0 +1,22 @@
+services:
+  ratelimiter:
+    image: "d4rkest/ratelimiter:0.2"
+    ports:
+      - 8081:8081
+      - 8080:8080
+      - 6070:6070
+    environment:
+      LOG_LEVEL: 'INFO'
+      REDIS_SOCKET_TYPE: 'TCP'
+      REDIS_URL: 'redis:6379'
+      RUNTIME_IGNOREDOTFILES: 'true'
+      RUNTIME_ROOT: '/home/user/src/runtime/data'
+      RUNTIME_SUBDIRECTORY: 'ratelimit'
+      RUNTIME_WATCH_ROOT: 'false'
+      USE_STATSD: 'false'
+      STATSD_HOST: 'localhost'
+      STATSD_PORT: '9125'
+    volumes:
+      - ./rate_config:/home/user/src/runtime/data/ratelimit/config
+  redis:
+    image: "redis:6.0.6"

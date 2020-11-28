@@ -1,0 +1,62 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-all
+  namespace: istio-system
+spec:
+  {}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-namespace-inner-communications
+  namespace: *MICROSERVICE_NS*
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - dso-msa-services
+              # открываем досnуп к/из istio-system для сбора метрик и прочих технологических взаимодейсnвий istio
+              # в случае если будут определены другие "технологические" namespace - им также необходимо будет открыть доступ
+              - istio-system
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-access-to-ingress
+  namespace: *MICROSERVICE_NS*
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: ingress-api-gateway
+  rules:
+    - {}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-access-to-egress
+  namespace: *MICROSERVICE_NS*
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: egress-api-gateway
+  rules:
+    - {}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-prometheus-communications
+  namespace: *MICROSERVICE_NS*
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - *PROMETHEUS_NS*

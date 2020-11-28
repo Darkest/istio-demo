@@ -1,0 +1,151 @@
+apiVersion: maistra.io/v1
+kind: ServiceMeshControlPlane
+metadata:
+  name: basic-install
+  namespace: istio-system
+spec:
+  istio:
+    global:
+      defaultConfigVisibilitySettings:
+        - .
+      mtls:
+        enabled: true
+      outboundTrafficPolicy:
+        mode: REGISTRY_ONLY
+      proxy:
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        accessLogFile: /dev/stdout
+        accessLogEnсoding: JSON
+        accessLogFormat: |
+          {
+            "response_code": "%RESPONSE_CODE%",
+            "traceId": "%REQ(x-b3-traceid)%",
+            "protocol": "%PROTOCOL%",
+            "upstream_service_time": "%REQ(x-envoy-upstream-service-time)%",
+            "upstream_local_address": "%UPSTREAM_LOCAL_ADDRESS%",
+            "duration": "%DURATION%",
+            "upstream_transport_failure_reason": "%UPSTREAM_TRANSPORT_FAILURE_REASON%",
+            "route_name": "%ROUTE_NAME%",
+            "downstream_local_address": "%DOWNSTREAM_LOCAL_ADDRESS%",
+            "user_agent": "%REQ(USER-AGENT)%",
+            "response_flags": "%RESPONSE_FLAGS%",
+            "metadata": "%DYNAMIC_METADATA(istio.mixer:status)%",
+            "start_time": "%START_TIME%",
+            "method": "%REQ(:METHOD)%",
+            "request_id": "%REQ(X-REQUEST-ID)%",
+            "upstream_host": "%UPSTREAM_HOST%",
+            "x_forwarded_for": "%REQ(X-FORWARDED-FOR)%",
+            "requested_server_name": "%REQUESTED_SERVER_NAME%",
+            "bytes_received": "%BYTES_RECEIVED%",
+            "istio_policy_status": "-",
+            "bytes_sent": "%BYTES_SENT%",
+            "upstream_cluster": "%UPSTREAM_CLUSTER%",
+            "downstream_remote_address": "%DOWNSTREAM_REMOTE_ADDRESS%",
+            "authority": "%REQ(:AUTHORITY)%",
+            "host": "%REQ(:HOST)%",
+            "path": "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+          }
+        # --- Подсаживает sidecar-proxy даже если в deployment не указана соответствующая аннотация "sidecar.istio.io/inject"
+        autoInject: enabled
+        dnsRefreshRate: 300s
+    sidecarInjectorWebhook:
+      enabled: true
+      replicaCount: 1
+    # --- sidecarInjectorWebhook отработает для namespace в SMMR даже если у Namespace не проставлен label - istio-injection
+    # Note that if enableNamespacesByDefault is set to true, the matching rules of the namespace selector are used
+    # to determine whether to enable automatic sidecar injection by default, that is, the value of istio-injection is not
+    # disabled. If enableNamespacesByDefault is set to false, automatic sidecar injection is enabled only when the flag
+    # istio-injection is set to enabled in the namespace.
+    #      enableNamespacesByDefault: true
+    gateways:
+      istio-egressgateway:
+        enabled: false
+      istio-ingressgateway:
+        enabled: false
+    pilot:
+      # -- Указать количество реплик возможно только задав autoscale с min и max значениями
+      autoscaleEnabled: false
+      replicaCount: 1
+      traceSampling: 100
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256M
+        requests:
+          cpu: 100m
+          memory: 256M
+    mixer:
+      enabled: true
+      policy:
+        enabled: true
+        replicaCount: 1
+        autoscaleEnabled: false
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256M
+          requests:
+            cpu: 100m
+            memory: 256M
+      telemetry:
+        enabled: true
+        replicaCount: 1
+        autoscaleEnabled: false
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256M
+          requests:
+            cpu: 100m
+            memory: 256M
+    security:
+      enabled: true
+      replicaCount: 1
+      selfSigned: true
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256M
+        requests:
+          cpu: 100m
+          memory: 256M
+    kiali:
+      enabled: true
+      replicaCount: 1
+      dashboard:
+        viewOnlyMode: true
+    grafana:
+      replicaCount: 1
+      enabled: true
+    tracing:
+      enabled: true
+      jaeger:
+        template: all-in-one
+    prometheus:
+      enabled: true
+      replicaCount: 1
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256M
+        requests:
+          cpu: 100m
+          memory: 256M
+    galley:
+      enabled: true
+      replicaCount: 1
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256M
+        requests:
+          cpu: 100m
+          memory: 256M
+  template: default
+  version: v1.1

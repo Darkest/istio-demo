@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-collector
+  labels:
+    app: jaeger-collector
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: jaeger-collector
+      labels:
+        app: jaeger-collector
+      annotations:
+        sidecar.istio.io/inject: 'true'
+    spec:
+      containers:
+        - name: jaeger-collector
+          image: jaegertracing/all-in-one:1.19.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 14250
+              name: grpc
+            - containerPort: 16686
+              name: http-front
+          args:
+            - '--log-level=debug'
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: jaeger-collector
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-collector
+spec:
+  selector:
+    app: jaeger-collector
+  ports:
+    - port: 14250
+      targetPort: 14250
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: jaeger-mesh
+spec:
+  exportTo:
+    - "."
+  hosts:
+    - "jaeger-collector"
+  tcp:
+    - route:
+        - destination:
+            host: jaeger-collector
+            port:
+              number: 14250
+          weight: 100
+      retries:
+        attempts: 0
+        #pefrTryTimeout: 2s

@@ -1,17 +1,18 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: ServiceEntry
 metadata:
-  name: elastic-se
+  name: external-jaeger-collector
+  namespace: istio-system
 spec:
   hosts:
-    - elastic.istio-system
+    - external-jaeger-collector.istio-system
   location: MESH_EXTERNAL
   ports:
-    - number: 9200
+    - number: 9411
       name: http
       protocol: HTTP
   resolution: DNS
   endpoints:
     - address: 192.168.1.183
       ports:
-        http: 9200
+        http: 9411
